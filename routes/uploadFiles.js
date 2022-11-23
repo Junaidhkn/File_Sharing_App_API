@@ -11,7 +11,7 @@ let storage = multer.diskStorage( {
 	destination: ( req, file, cb ) => {
 		cb( null, 'upload/' );
 	},
-	name: ( req, file, cb ) => {
+	filename: ( req, file, cb ) => {
 		const uniqueName = `${Date.now()}-${Math.round(
 			Math.random() * 1e5,
 		)}${path.extname( file.originalname )}`;
