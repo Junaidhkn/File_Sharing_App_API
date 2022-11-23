@@ -31,7 +31,7 @@ router.post( '/', ( req, res ) => {
 		}
 		const file = new File( {
 			filename: req.file.filename,
-			uuid: uuidv4(),
+			uuid: uuid4(),
 			path: req.file.path,
 			size: req.file.size
 		} );
