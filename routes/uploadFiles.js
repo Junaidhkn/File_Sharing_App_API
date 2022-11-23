@@ -40,41 +40,6 @@ router.post( '/', ( req, res ) => {
 	} );
 } );
 
-router.post( '/send', async ( req, res ) => {
-	const { uuid, emailTo, emailFrom, title, description } = req.body;
-
-	if ( !uuid || !emailTo || !emailFrom ) {
-		return res.status( 400 ).json( { error: 'All fields are required.' } );
-	}
-
-	const file = await File.findOne( { uuid: uuid } );
-	if ( !file ) {
-		return res.status( 400 ).json( { error: 'File not found.' } );
-	}
-	file.sender = emailFrom;
-	file.receiver = emailTo;
-	file.title = title;
-	file.description = description;
-
-	const response = await file.save();
-
-	// Send Email
-	sendEmail( {
-		to: emailTo,
-		from: emailFrom,
-		Subject: title,
-		description: description,
-		html: require( '../services/emailTemplate' )( {
-			emailFrom: emailFrom,
-			Subject: title,
-			description: description,
-			downloadLink: `${process.env.APP_URL}/files/download/${file.uuid}`,
-			size: parseInt( file.size / 1000 ) + ' KB',
-			expires: '24 hours',
-		} ),
-	} );
-	return res.send( { success: true } );
-} );
 
 
 router.post( '/send', async ( req, res ) => {
