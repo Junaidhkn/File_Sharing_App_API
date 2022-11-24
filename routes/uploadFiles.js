@@ -32,7 +32,7 @@ router.post( '/', ( req, res ) => {
 			size: req.file.size
 		} );
 		const response = await file.save();
-		res.json( { file: `${process.env.APP_BASE_URL}/files/${response.uuid}` } );
+		res.json( { file: `${process.env.APP_BASE_URL}/files/${response.uuid}`, id: response.uuid, name: response.filename, size: response.size } );
 	} );
 } );
 
