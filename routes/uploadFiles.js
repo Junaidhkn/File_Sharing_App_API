@@ -39,8 +39,8 @@ router.post( '/', ( req, res ) => {
 
 
 router.post( '/send', async ( req, res ) => {
-	const { uuid, emailTo, emailFrom, title, description } = req.body;
-	if ( !uuid || !emailTo || !emailFrom ) {
+	const { uuid, emailto, emailfrom, title, description } = req.body;
+	if ( !uuid || !emailto || !emailfrom ) {
 		return res.status( 422 ).send( { error: 'All fields are required!' } );
 	}
 	// Get data from db 
@@ -49,16 +49,16 @@ router.post( '/send', async ( req, res ) => {
 		if ( file.sender ) {
 			return res.status( 422 ).send( { error: 'Email already sent once.' } );
 		}
-		file.sender = emailFrom;
-		file.receiver = emailTo;
+		file.sender = emailfrom;
+		file.receiver = emailto;
 		const response = await file.save();
 		// send mail
 		const sendMail = require( '../services/emailService.js' );
 		sendMail( {
-			from: emailFrom,
-			to: emailTo,
+			from: emailfrom,
+			to: emailto,
 			subject: title,
-			text: `${emailFrom} shared a file with you.\n ${description}`,
+			text: `${emailfrom} shared a file with you.\n ${description}`,
 			html: require( '../services/emailTemplate.js' )( {
 				emailFrom,
 				downloadLink: `${process.env.APP_BASE_URL}/files/${file.uuid}?source=email`,
